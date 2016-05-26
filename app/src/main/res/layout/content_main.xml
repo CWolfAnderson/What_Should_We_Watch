@@ -1,5 +1,5 @@
 <fragment android:id="@+id/fragment"
-          android:name="com.anderson.christoph.whatshouldwewatch.MainActivityFragment"
+          android:name="com.anderson.christoph.whatshouldwewatch.MovieFragment"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
           xmlns:tools="http://schemas.android.com/tools"
