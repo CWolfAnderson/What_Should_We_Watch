@@ -1,12 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" >
-
-    <item
-        jar="/Users/christoph/GitHub/What_Should_We_Watch-Android/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="db8f08e875346e753d66c7b9c0b0427e5a0f6225">
-        <dex dex="/Users/christoph/GitHub/What_Should_We_Watch-Android/app/build/intermediates/pre-dexed/debug/instant-run-bootstrap_9afe8ad8e60a2463274115d05a49aa6e9374dc54.jar" />
-    </item>
-
-</items>
+<items version="2" />

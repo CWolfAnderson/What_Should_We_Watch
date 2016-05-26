@@ -1,5 +1,6 @@
 package com.anderson.christoph.whatshouldwewatch;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,7 +51,7 @@ public class MovieFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute();
+            movieTask.execute("eminem");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -89,12 +90,18 @@ public class MovieFragment extends Fragment {
 
     }
 
-    public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
+    public class FetchMovieTask extends AsyncTask<String, Void, Void> {
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+
+            // If there's no movie, there's nothing to look up. Verify size of params.
+            if (params.length ==0) {
+                return null;
+            }
+
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -103,11 +110,27 @@ public class MovieFragment extends Fragment {
             // Will contain the raw JSON response as a string.
             String movieJsonStr = null;
 
+//            String format = "json";
+//            String units = "metric";
+//            int numDays = 7;
+
             try {
+
                 // Construct the URL for the TheMovieDatabase query
-                String baseUrl = "http://api.themoviedb.org/3/search/movie?query=eminem/";
-                String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
-                URL url = new URL(baseUrl.concat(apiKey));
+                // http://api.themoviedb.org/3/search/movie?query=eminem/&api_key=f80d264860c34f8a56de05455c80846f
+                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/search/movie?";
+                final String QUERY_PARAM = "query";
+                final String APPID_PARAM = "api_key";
+
+                Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                        .appendQueryParameter(QUERY_PARAM, params[0])
+                        .appendQueryParameter(APPID_PARAM, BuildConfig.THE_MOVIE_DATABASE_API_KEY)
+                        .build();
+
+//                String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
+                URL url = new URL(builtUri.toString());
+
+                Log.d("nuts", "Built URI" + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
