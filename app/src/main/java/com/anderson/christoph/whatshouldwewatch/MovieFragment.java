@@ -117,7 +117,7 @@ public class MovieFragment extends Fragment {
 //            final String OWM_DESCRIPTION = "main";
 
             final String TMDB_LIST = "results";
-            final String TMDB_TITLE = "title";
+            final String TMDB_TITLE = "original_title";
             final String TMDB_DESCRIPTION = "overview";
 
             JSONObject forecastJson = new JSONObject(movieJsonStr);
@@ -127,36 +127,25 @@ public class MovieFragment extends Fragment {
 
             String[] resultStrs = new String[numMovies];
 
-            for(int i = 0; i < movieArray.length(); i++) {
-
-                // For now, using the format "Day, description, hi/low"
-//                String day;
-//                String description;
-//                String highAndLow;
+            for (int i = 0; i < movieArray.length(); i++) {
 
                 JSONObject movieJson = movieArray.getJSONObject(i);
 
-                String title = movieJson.getString("original_title");
+                String title = movieJson.getString(TMDB_TITLE);
 
-                Log.d("shit", "The title!!!!!!!: " + title);
+                Log.d("title", "Title: " + title);
 
-//                // description is in a child array called "weather", which is 1 element long.
-//                JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-//                description = weatherObject.getString(OWM_DESCRIPTION);
-//
-//                // Temperatures are in a child object called "temp".  Try not to name variables
-//                // "temp" when working with temperature.  It confuses everybody.
-//                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
-//                double high = temperatureObject.getDouble(OWM_MAX);
-//                double low = temperatureObject.getDouble(OWM_MIN);
-//
-//                highAndLow = formatHighLows(high, low);
-//                resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                String description = movieJson.getString(TMDB_DESCRIPTION);
+
+                Log.d("description", "Description: " + description);
+
+                resultStrs[i] = title;
             }
 
             for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
+                Log.v(LOG_TAG, "Movie entry: " + s);
             }
+
             return resultStrs;
 
         }
@@ -199,7 +188,7 @@ public class MovieFragment extends Fragment {
 //                String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
                 URL url = new URL(builtUri.toString());
 
-                Log.d("nuts", "Built URI" + builtUri.toString());
+                Log.d("uri", "Built URI" + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -258,5 +247,18 @@ public class MovieFragment extends Fragment {
 
             return null;
         }
+
+        // This is what actually displays the titles
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                movieAdapter.clear();
+                for (String movieStr : result) {
+                    movieAdapter.add(movieStr);
+                }
+                // New data is back from the server.
+            }
+        }
+
     }
 }
