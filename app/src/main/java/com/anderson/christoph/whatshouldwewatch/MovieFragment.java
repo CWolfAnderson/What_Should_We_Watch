@@ -49,9 +49,7 @@ public class MovieFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchMovieTask movieTask = new FetchMovieTask();
@@ -87,7 +85,7 @@ public class MovieFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Get a reference to the ListView, and attach this adapter to it.
+        // get a reference to the ListView, and attach this adapter to it
         ListView listView = (ListView) rootView.findViewById(R.id.listview_movie);
         listView.setAdapter(movieAdapter);
 
@@ -102,19 +100,8 @@ public class MovieFragment extends Fragment {
         /**
          * Take the String representing the complete movie in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
-         *
-         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
-         * into an Object hierarchy for us.
          */
         private String[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
-
-            // These are the names of the JSON objects that need to be extracted.
-//            final String OWM_LIST = "list";
-//            final String OWM_WEATHER = "weather";
-//            final String OWM_TEMPERATURE = "temp";
-//            final String OWM_MAX = "max";
-//            final String OWM_MIN = "min";
-//            final String OWM_DESCRIPTION = "main";
 
             final String TMDB_LIST = "results";
             final String TMDB_TITLE = "original_title";
@@ -153,26 +140,21 @@ public class MovieFragment extends Fragment {
         @Override
         protected String[] doInBackground(String... params) {
 
-            // If there's no movie, there's nothing to look up. Verify size of params.
+            // if there's no movie, there's nothing to look up
             if (params.length ==0) {
                 return null;
             }
 
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
+            // declared outside the try/catch so they can be closed in the finally block
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            // Will contain the raw JSON response as a string.
+            // contains the raw JSON response as a string.
             String movieJsonStr = null;
-
-//            String format = "json";
-//            String units = "metric";
-//            int numDays = 7;
 
             try {
 
-                // Construct the URL for the TheMovieDatabase query
+                // construct the URL for the TheMovieDatabase query
                 // http://api.themoviedb.org/3/search/movie?query=eminem/&api_key=f80d264860c34f8a56de05455c80846f
                 // http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2016-01-01&primary_release_date.lte=2016-05-01/&api_key=f80d264860c34f8a56de05455c80846f
                 // final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/search/movie?";
@@ -185,35 +167,33 @@ public class MovieFragment extends Fragment {
                         .appendQueryParameter(APPID_PARAM, BuildConfig.THE_MOVIE_DATABASE_API_KEY)
                         .build();
 
-//                String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
+                // String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
                 URL url = new URL(builtUri.toString());
 
                 Log.d("uri", "Built URI" + builtUri.toString());
 
-                // Create the request to OpenWeatherMap, and open the connection
+                // create the request to TheMovieDatabase, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
+                // read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
+                    // since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // but it does make debugging a *lot* easier if you print out the completed buffer for debugging
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
+                    // stream empty ~ no point in parsing
                     return null;
                 }
                 movieJsonStr = buffer.toString();
@@ -222,8 +202,7 @@ public class MovieFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the movie data, there's no point in attempting
-                // to parse it.
+                // if the code didn't successfully get the movie data, there's no point in attempting to parse it
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -248,7 +227,7 @@ public class MovieFragment extends Fragment {
             return null;
         }
 
-        // This is what actually displays the titles
+        // this is what actually displays the titles
         @Override
         protected void onPostExecute(String[] result) {
             if (result != null) {
@@ -256,7 +235,7 @@ public class MovieFragment extends Fragment {
                 for (String movieStr : result) {
                     movieAdapter.add(movieStr);
                 }
-                // New data is back from the server.
+                // new data is back from the server
             }
         }
 
