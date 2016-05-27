@@ -55,7 +55,8 @@ public class MovieFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute("eminem");
+            // movieTask.execute("eminem");
+            movieTask.execute("2016-05-01");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -185,8 +186,9 @@ public class MovieFragment extends Fragment {
                 // Construct the URL for the TheMovieDatabase query
                 // http://api.themoviedb.org/3/search/movie?query=eminem/&api_key=f80d264860c34f8a56de05455c80846f
                 // http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2016-01-01&primary_release_date.lte=2016-05-01/&api_key=f80d264860c34f8a56de05455c80846f
-                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/search/movie?";
-                final String QUERY_PARAM = "query";
+                // final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/search/movie?";
+                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2016-01-01&";
+                final String QUERY_PARAM = "primary_release_date.lte";
                 final String APPID_PARAM = "api_key";
 
                 Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
