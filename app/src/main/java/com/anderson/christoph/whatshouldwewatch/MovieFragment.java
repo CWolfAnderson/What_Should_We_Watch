@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,12 +94,74 @@ public class MovieFragment extends Fragment {
 
     }
 
-    public class FetchMovieTask extends AsyncTask<String, Void, Void> {
+    public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
+        /**
+         * Take the String representing the complete movie in JSON Format and
+         * pull out the data we need to construct the Strings needed for the wireframes.
+         *
+         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
+         * into an Object hierarchy for us.
+         */
+        private String[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+//            final String OWM_LIST = "list";
+//            final String OWM_WEATHER = "weather";
+//            final String OWM_TEMPERATURE = "temp";
+//            final String OWM_MAX = "max";
+//            final String OWM_MIN = "min";
+//            final String OWM_DESCRIPTION = "main";
+
+            final String TMDB_LIST = "results";
+            final String TMDB_TITLE = "title";
+            final String TMDB_DESCRIPTION = "overview";
+
+            JSONObject forecastJson = new JSONObject(movieJsonStr);
+            JSONArray movieArray = forecastJson.getJSONArray(TMDB_LIST);
+
+            int numMovies = 20;
+
+            String[] resultStrs = new String[numMovies];
+
+            for(int i = 0; i < movieArray.length(); i++) {
+
+                // For now, using the format "Day, description, hi/low"
+//                String day;
+//                String description;
+//                String highAndLow;
+
+                JSONObject movieJson = movieArray.getJSONObject(i);
+
+                String title = movieJson.getString("original_title");
+
+                Log.d("shit", "The title!!!!!!!: " + title);
+
+//                // description is in a child array called "weather", which is 1 element long.
+//                JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+//                description = weatherObject.getString(OWM_DESCRIPTION);
+//
+//                // Temperatures are in a child object called "temp".  Try not to name variables
+//                // "temp" when working with temperature.  It confuses everybody.
+//                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
+//                double high = temperatureObject.getDouble(OWM_MAX);
+//                double low = temperatureObject.getDouble(OWM_MIN);
+//
+//                highAndLow = formatHighLows(high, low);
+//                resultStrs[i] = day + " - " + description + " - " + highAndLow;
+            }
+
+            for (String s : resultStrs) {
+                Log.v(LOG_TAG, "Forecast entry: " + s);
+            }
+            return resultStrs;
+
+        }
+
         @Override
-        protected Void doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
 
             // If there's no movie, there's nothing to look up. Verify size of params.
             if (params.length ==0) {
@@ -118,6 +184,7 @@ public class MovieFragment extends Fragment {
 
                 // Construct the URL for the TheMovieDatabase query
                 // http://api.themoviedb.org/3/search/movie?query=eminem/&api_key=f80d264860c34f8a56de05455c80846f
+                // http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2016-01-01&primary_release_date.lte=2016-05-01/&api_key=f80d264860c34f8a56de05455c80846f
                 final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/search/movie?";
                 final String QUERY_PARAM = "query";
                 final String APPID_PARAM = "api_key";
@@ -179,6 +246,14 @@ public class MovieFragment extends Fragment {
                     }
                 }
             }
+
+            try {
+                return getMovieDataFromJson(movieJsonStr);
+            } catch(JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
