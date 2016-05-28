@@ -11,8 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +53,8 @@ public class MovieFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks.
         int id = item.getItemId();
+
+        // when the refresh button is clicked
         if (id == R.id.action_refresh) {
             FetchMovieTask movieTask = new FetchMovieTask();
             // movieTask.execute("eminem");
@@ -88,6 +92,15 @@ public class MovieFragment extends Fragment {
         // get a reference to the ListView, and attach this adapter to it
         ListView listView = (ListView) rootView.findViewById(R.id.listview_movie);
         listView.setAdapter(movieAdapter);
+
+        // display a toast when a movie is clicked
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String movie = movieAdapter.getItem(position);
+                Toast.makeText(getActivity(), movie, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return rootView;
 
