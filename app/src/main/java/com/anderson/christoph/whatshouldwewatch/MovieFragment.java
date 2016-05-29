@@ -133,18 +133,18 @@ public class MovieFragment extends Fragment {
 
                 String title = movieJson.getString(TMDB_TITLE);
 
-                Log.d("title", "Title: " + title);
+                // Log.d("title", "Title: " + title);
 
                 String description = movieJson.getString(TMDB_DESCRIPTION);
 
-                Log.d("description", "Description: " + description);
+                // Log.d("description", "Description: " + description);
 
                 resultStrs[i] = title;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Movie entry: " + s);
-            }
+            // for (String s : resultStrs) {
+                // Log.v(LOG_TAG, "Movie entry: " + s);
+            // }
 
             return resultStrs;
 
@@ -183,7 +183,7 @@ public class MovieFragment extends Fragment {
                 // String apiKey = "&api_key=" + BuildConfig.THE_MOVIE_DATABASE_API_KEY;
                 URL url = new URL(builtUri.toString());
 
-                Log.d("uri", "Built URI" + builtUri.toString());
+                Log.d("uri", "Built URI: " + builtUri.toString());
 
                 // create the request to TheMovieDatabase, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -212,6 +212,8 @@ public class MovieFragment extends Fragment {
                 movieJsonStr = buffer.toString();
 
                 Log.v(LOG_TAG, "Movie JSON String: " + movieJsonStr);
+
+                Log.d("json", "JSON: " + movieJsonStr);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
