@@ -91,7 +91,7 @@ public class TestDb extends AndroidTestCase {
         // Second Step: Create ContentValues of what you want to insert
         ContentValues testValues = new ContentValues();
         testValues.put(MovieContract.Review.COLUMN_DISPLAY_TITLE, TEST_MOVIE);
-        testValues.put(MovieContract.Review.COLUMN_SUMMARY_SHORT, "Based upon Marvel Comics’ most unconventional anti-hero, DEADPOOL tells the origin story of former Special Forces operative turned mercenary Wade Wilson, who after being subjected to a rogue experiment that leaves him with accelerated healing powers, adopts the alter ego Deadpool. Armed with his new abilities and a dark, twisted sense of humor, Deadpool hunts down the man who nearly destroyed his life.");
+        testValues.put(MovieContract.Review.COLUMN_SUMMARY_SHORT, TEST_DESCRIPTION);
         testValues.put(MovieContract.Review.COLUMN_PUBLISH_DATE, TEST_DATE);
 
         // Third Step: Insert ContentValues into database and get a row ID back
@@ -125,6 +125,7 @@ public class TestDb extends AndroidTestCase {
 
         // Sixth Step: Close Cursor and Database
         cursor.close();
+        db.execSQL("DROP TABLE IF EXISTS " + MovieContract.Review.TABLE_NAME);
         db.close();
 
     }
