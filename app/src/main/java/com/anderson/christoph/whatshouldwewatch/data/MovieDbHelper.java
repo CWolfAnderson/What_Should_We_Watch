@@ -15,7 +15,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
 
-    static final String DATABASE_NAME = "movie.db";
+    public static final String DATABASE_NAME = "movie.db";
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,9 +29,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 Review.COLUMN_DISPLAY_TITLE + " REAL NOT NULL, " +
                 Review.COLUMN_SUMMARY_SHORT + " REAL NOT NULL, " +
-                Review.COLUMN_PUBLISH_DATE + " REAL NOT NULL;";
-
-
+                Review.COLUMN_PUBLISH_DATE + " REAL NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
     }
